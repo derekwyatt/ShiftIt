@@ -27,13 +27,16 @@
     NSString *debugLoggingFile_;
 	
     IBOutlet NSTabView *tabView_;
-	IBOutlet NSTextField *versionLabel_;
+    IBOutlet NSTextField *versionLabel_;
 
     IBOutlet NSButtonCell *showMenuIcon;
 
     IBOutlet NSTableView *hotkeysView_;
     IBOutlet NSTableColumn *hotkeyLabelColumn_;
     IBOutlet NSTableColumn *hotkeyColumn_;
+
+    IBOutlet NSTextField *horizontalSplitValue_;
+    IBOutlet NSTextField *verticalSplitValue_;
 }
 
 @property BOOL shouldStartAtLogin;
@@ -46,5 +49,7 @@
 -(IBAction)reportIssue:(id)sender;
 -(IBAction)revealLogFileInFinder:(id)sender;
 -(IBAction)showMenuBarIconAction:(id)sender;
+-(IBAction)horizontalSplitValueChange:(NSSliderCell *)sender;
+-(IBAction)verticalSplitValueChange:(NSSlider *)sender;
 
 @end

@@ -48,6 +48,9 @@ NSString *const kFixedSizeWidthDeltaPrefKey = @"fixedSizeWidthDelta";
 NSString *const kFixedSizeHeightDeltaPrefKey = @"fixedSizeHeightDelta";
 NSString *const kWindowSizeDeltaPrefKey = @"windowSizeDelta";
 NSString *const kScreenSizeDeltaPrefKey = @"screenSizeDelta";
+NSString *const kVerticalSplitKey = @"verticalSplitValue";
+NSString *const kHorizontalSplitKey = @"horizontalSplitValue";
+NSString *const kSplitThirdsKey = @"splitThirds";
 
 // AX Driver Options
 // TODO: should be moved to AX driver

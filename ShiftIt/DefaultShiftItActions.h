@@ -22,6 +22,7 @@
 #import "ShiftIt.h"
 
 BOOL CloseTo(double a, double b);
+double horizontalSplit(NSUserDefaults *defaults);
 const extern SimpleWindowGeometryChangeBlock shiftItLeft;
 const extern SimpleWindowGeometryChangeBlock shiftItRight;
 const extern SimpleWindowGeometryChangeBlock shiftItTop;

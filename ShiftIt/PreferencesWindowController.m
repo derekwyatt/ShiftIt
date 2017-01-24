@@ -311,4 +311,14 @@ static NSString *hotkeyIdentifiers[] = {
     }
 }
 
+- (IBAction)horizontalSplitValueChange:(NSSliderCell *)sender {
+  horizontalSplitValue_.integerValue = (long)((1 - [sender doubleValue]) * 100);
+  [horizontalSplitValue_ setNeedsDisplay];
+}
+
+- (IBAction)verticalSplitValueChange:(NSSlider *)sender {
+  verticalSplitValue_.integerValue = (long)([sender doubleValue] * 100);
+  [verticalSplitValue_ setNeedsDisplay];
+}
+
 @end

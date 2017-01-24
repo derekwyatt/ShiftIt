@@ -25,7 +25,15 @@ BOOL CloseTo(double a, double b) {
   return fabs(a - b) < 20;
 }
 
+double horizontalSplit(NSUserDefaults *defaults) {
+  return 1.0 - [defaults doubleForKey:kHorizontalSplitKey];
+}
+
 const SimpleWindowGeometryChangeBlock shiftItLeft = ^AnchoredRect(NSRect windowRect, NSSize screenSize) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    double verticalSplit = [defaults doubleForKey:kVerticalSplitKey];
+    BOOL splitThirds = [defaults boolForKey:kSplitThirdsKey];
+
     NSRect r = NSMakeRect(0, 0, 0, 0);
 
     r.origin.x = 0;
@@ -34,131 +42,178 @@ const SimpleWindowGeometryChangeBlock shiftItLeft = ^AnchoredRect(NSRect windowR
     double w = windowRect.size.width;
     double sw = screenSize.width;
 
-    r.size.width = screenSize.width / 2.0;
+    r.size.width = screenSize.width * verticalSplit;
     r.size.height = screenSize.height;
 
-    if (CloseTo(w, sw / 2.0)) {
-      r.size.width = floor(sw * 1.0 / 3.0);
-    } else if (CloseTo(w, sw / 3.0)) {
-      r.size.width = floor(sw * 2.0 / 3.0);
+    if (splitThirds) {
+      if (CloseTo(w, sw * verticalSplit)) {
+        r.size.width = floor(sw * 1.0 / 3.0);
+      } else if (CloseTo(w, sw / 3.0)) {
+        r.size.width = floor(sw * 2.0 / 3.0);
+      }
     }
 
     return MakeAnchoredRect(r, kLeftDirection);
 };
 
 const SimpleWindowGeometryChangeBlock shiftItRight = ^AnchoredRect(NSRect windowRect, NSSize screenSize) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    double verticalSplit = [defaults doubleForKey:kVerticalSplitKey];
+    BOOL splitThirds = [defaults boolForKey:kSplitThirdsKey];
+
     NSRect r = NSMakeRect(0, 0, 0, 0);
 
-    r.origin.x = screenSize.width / 2;
+    double factor = (1 - verticalSplit);
+
+    r.origin.x = screenSize.width * verticalSplit;
     r.origin.y = 0;
 
-    r.size.width = screenSize.width / 2.0;
+    r.size.width = screenSize.width * factor;
     r.size.height = screenSize.height;
 
     double w = windowRect.size.width;
     double sw = screenSize.width;
 
-    if (CloseTo(w, sw / 2.0)) {
-      r.size.width = floor(sw * 1.0 / 3.0);
-      r.origin.x = sw - (sw * 1.0 / 3.0);
-    } else if (CloseTo(w, sw / 3.0)) {
-      r.size.width = floor(sw * 2.0 / 3.0);
-      r.origin.x = sw - (sw * 2.0 / 3.0);
+    if (splitThirds) {
+      if (CloseTo(w, sw * factor)) {
+        r.size.width = floor(sw * 1.0 / 3.0);
+        r.origin.x = sw - (sw * 1.0 / 3.0);
+      } else if (CloseTo(w, sw / 3.0)) {
+        r.size.width = floor(sw * 2.0 / 3.0);
+        r.origin.x = sw - (sw * 2.0 / 3.0);
+      }
     }
 
     return MakeAnchoredRect(r, kRightDirection);
 };
 
 const SimpleWindowGeometryChangeBlock shiftItTop = ^AnchoredRect(NSRect windowRect, NSSize screenSize) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    double hSplit = horizontalSplit(defaults);
+    BOOL splitThirds = [defaults boolForKey:kSplitThirdsKey];
+
     NSRect r = NSMakeRect(0, 0, 0, 0);
 
     r.origin.x = 0;
     r.origin.y = 0;
 
     r.size.width = screenSize.width;
-    r.size.height = screenSize.height / 2;
+    r.size.height = screenSize.height * hSplit;
 
     double windowHeight = windowRect.size.height;
     double screenHeight = screenSize.height;
 
-    if (CloseTo(windowHeight, screenHeight / 2.0)) {
-      r.size.height = floor(screenHeight * 1.0 / 3.0);
-      r.origin.y = screenHeight * 1.0 / 3.0;
-    } else if (CloseTo(windowHeight, screenHeight / 3.0)) {
-      r.size.height = floor(screenHeight * 2.0 / 3.0);
-      r.origin.y = screenHeight * 2.0 / 3.0;
+    if (splitThirds) {
+      if (CloseTo(windowHeight, screenHeight * hSplit)) {
+        r.size.height = floor(screenHeight * 1.0 / 3.0);
+        r.origin.y = screenHeight * 1.0 / 3.0;
+      } else if (CloseTo(windowHeight, screenHeight / 3.0)) {
+        r.size.height = floor(screenHeight * 2.0 / 3.0);
+        r.origin.y = screenHeight * 2.0 / 3.0;
+      }
     }
 
     return MakeAnchoredRect(r, kTopDirection);
 };
 
 const SimpleWindowGeometryChangeBlock shiftItBottom = ^AnchoredRect(NSRect windowRect, NSSize screenSize) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    double hSplit = horizontalSplit(defaults);
+    BOOL splitThirds = [defaults boolForKey:kSplitThirdsKey];
+
     NSRect r = NSMakeRect(0, 0, 0, 0);
 
+    double factor = 1 - hSplit;
+
     r.origin.x = 0;
-    r.origin.y = screenSize.height / 2;
+    r.origin.y = screenSize.height * factor;
 
     r.size.width = screenSize.width;
-    r.size.height = screenSize.height / 2;
+    r.size.height = screenSize.height * factor;
 
     double windowHeight = windowRect.size.height;
     double screenHeight = screenSize.height;
 
-    if (CloseTo(windowHeight, screenHeight / 2.0)) {
-      r.size.height = floor(screenHeight * 1.0 / 3.0);
-      r.origin.y = screenHeight - (screenHeight * 1.0 / 3.0);
-    } else if (CloseTo(windowHeight, screenHeight / 3.0)) {
-      r.size.height = floor(screenHeight * 2.0 / 3.0);
-      r.origin.y = screenHeight - (screenHeight * 2.0 / 3.0);
+    if (splitThirds) {
+      if (CloseTo(windowHeight, screenHeight * factor)) {
+        r.size.height = floor(screenHeight * 1.0 / 3.0);
+        r.origin.y = screenHeight - (screenHeight * 1.0 / 3.0);
+      } else if (CloseTo(windowHeight, screenHeight / 3.0)) {
+        r.size.height = floor(screenHeight * 2.0 / 3.0);
+        r.origin.y = screenHeight - (screenHeight * 2.0 / 3.0);
+      }
     }
 
     return MakeAnchoredRect(r, kBottomDirection);
 };
 
 const SimpleWindowGeometryChangeBlock shiftItTopLeft = ^AnchoredRect(NSRect windowRect, NSSize screenSize) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    double hSplit = horizontalSplit(defaults);
+    double verticalSplit = [defaults doubleForKey:kVerticalSplitKey];
+
     NSRect r = NSMakeRect(0, 0, 0, 0);
 
     r.origin.x = 0;
     r.origin.y = 0;
 
-    r.size.width = screenSize.width / 2;
-    r.size.height = screenSize.height / 2;
+    r.size.width = screenSize.width * verticalSplit;
+    r.size.height = screenSize.height * hSplit;
 
     return MakeAnchoredRect(r, kTopDirection | kLeftDirection);
 };
 
 const SimpleWindowGeometryChangeBlock shiftItTopRight = ^AnchoredRect(NSRect windowRect, NSSize screenSize) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    double hSplit = horizontalSplit(defaults);
+    double verticalSplit = [defaults doubleForKey:kVerticalSplitKey];
+
     NSRect r = NSMakeRect(0, 0, 0, 0);
 
-    r.origin.x = screenSize.width / 2;
+    double verticalFactor = (1 - verticalSplit);
+
+    r.origin.x = screenSize.width * verticalSplit;
     r.origin.y = 0;
 
-    r.size.width = screenSize.width / 2;
-    r.size.height = screenSize.height / 2;
+    r.size.width = screenSize.width * verticalFactor;
+    r.size.height = screenSize.height * hSplit;
 
     return MakeAnchoredRect(r, kTopDirection | kRightDirection);
 };
 
 const SimpleWindowGeometryChangeBlock shiftItBottomLeft = ^AnchoredRect(NSRect windowRect, NSSize screenSize) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    double hSplit = horizontalSplit(defaults);
+    double verticalSplit = [defaults doubleForKey:kVerticalSplitKey];
+
     NSRect r = NSMakeRect(0, 0, 0, 0);
 
-    r.origin.x = 0;
-    r.origin.y = screenSize.height / 2;
+    double horizontalFactor = (1 - hSplit);
 
-    r.size.width = screenSize.width / 2;
-    r.size.height = screenSize.height / 2;
+    r.origin.x = 0;
+    r.origin.y = screenSize.height * hSplit;
+
+    r.size.width = screenSize.width * verticalSplit;
+    r.size.height = screenSize.height * horizontalFactor;
 
     return MakeAnchoredRect(r, kBottomDirection | kLeftDirection);
 };
 
 const SimpleWindowGeometryChangeBlock shiftItBottomRight = ^AnchoredRect(NSRect windowRect, NSSize screenSize) {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    double hSplit = horizontalSplit(defaults);
+    double verticalSplit = [defaults doubleForKey:kVerticalSplitKey];
+
+    double verticalFactor = (1 - verticalSplit);
+    double horizontalFactor = (1 - hSplit);
+
     NSRect r = NSMakeRect(0, 0, 0, 0);
 
-    r.origin.x = screenSize.width / 2;
-    r.origin.y = screenSize.height / 2;
+    r.origin.x = screenSize.width * verticalSplit;
+    r.origin.y = screenSize.height * hSplit;
 
-    r.size.width = screenSize.width / 2;
-    r.size.height = screenSize.height / 2;
+    r.size.width = screenSize.width * verticalFactor;
+    r.size.height = screenSize.height * horizontalFactor;
 
     return MakeAnchoredRect(r, kBottomDirection | kRightDirection);
 };

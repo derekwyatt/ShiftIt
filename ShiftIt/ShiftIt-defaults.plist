@@ -94,5 +94,12 @@
 	<integer>35</integer>
 	<key>previousscreenModifiers</key>
 	<real>1835008</real>
+	<key>verticalSplitValue</key>
+	<real>0.5</real>
+	<key>horizontalSplitValue</key>
+	<real>0.5</real>
+	<key>splitThirds</key>
+	<bool>no</bool>
+</dict>
 </dict>
 </plist>

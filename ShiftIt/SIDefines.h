@@ -28,6 +28,10 @@ extern NSInteger const kShiftItManagerFailureErrorCode;
 extern NSInteger const kWindowManagerFailureErrorCode;
 extern NSInteger const kShiftItActionFailureErrorCode;
 
+extern NSString *const kVerticalSplitKey;
+extern NSString *const kHorizontalSplitKey;
+extern NSString *const kSplitThirdsKey;
+
 extern NSString *const kMarginsEnabledPrefKey;
 extern NSString *const kLeftMarginPrefKey;
 extern NSString *const kTopMarginPrefKey;
